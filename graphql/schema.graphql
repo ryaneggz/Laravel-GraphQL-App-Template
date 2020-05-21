@@ -10,11 +10,84 @@ scalar DateTimeTz @scalar(class: "Nuwave\\Lighthouse\\Schema\\Types\\Scalars\\Da
 
 # Queries
 type Query {
-    users: [User!]! @paginate(defaultCount: 10)
+    # users: [User!]! @paginate(defaultCount: 10)
+    users: [User!]! @all
     user(id: ID @eq): User @find
-
+    # POSTS
     posts: [Post!]! @all
     post(id: Int! @eq): Post @find
+    # BOOKS
+    books: [Book] @all
+    book(id: Int! @eq): Book @find
+    booksByFeatured(featured: Boolean! @eq): [Book] @all
+    # CATEGORIES
+    categories: [Category] @all
+    category(id: Int! @eq): Category @find
+}
+
+# Mutations
+type Mutation {
+  """ 
+  USER Mutations
+  """
+  createUser(
+    name: String! @rules(apply: ["required", "min:4"]),
+    email: String! @rules(apply: ["required", "email", "unique: users, email"]),
+    password: String! @rules(apply: ["min:4"]) @bcrypt
+  ): User! @create
+
+  updateUser(
+   id: ID! @rules(apply: ["required"])
+   name: String
+   email: String @rules(apply: ["email"])
+  ): User! @update
+
+  deleteUser(
+   id: ID! @rules(apply: ["required"])
+  ): User! @delete
+
+  """ 
+  CATEGORY Mutations
+  """
+  createCategory(
+    name: String @rules(apply: ["required", "unique:categories,name"])
+  ): Category @create
+
+  updateCategory(
+   id: ID! @rules(apply: ["required"])
+   name: String! @rules(apply: ["required", "unique:categories,name"])
+  ): Category @update
+
+  deleteCategory(
+   id: ID! @rules(apply: ["required"])
+  ): Category @delete
+
+  """ 
+  BOOK Mutations
+  """
+  createBook(
+    category: Int! @rename(attribute: "category_id")
+    title: String! @rules(apply: ["required"])
+    author: String! @rules(apply: ["required"])
+    link: String
+    description: String
+    featured: Boolean
+  ): Book @create
+
+  updateBook(
+    id: ID! @rules(apply: ["required"])
+    category: Int! @rename(attribute: "category_id")
+    title: String! @rules(apply: ["required"])
+    author: String! @rules(apply: ["required"])
+    link: String
+    description: String
+    featured: Boolean
+  ): Book @update
+
+  deleteBook(
+   id: ID! @rules(apply: ["required"])
+  ): Book @delete
+
 }
 
 # Models
@@ -38,4 +111,21 @@ type Comment {
   id: ID!
   reply: String!
   post: Post! @belongsTo
+}
+
+type Category {
+  id: ID!
+  name: String!
+  books: [Book] @hasMany
+  created_at: DateTime!
+}
+
+type Book {
+  id: ID!
+  title: String!
+  author: String!
+  link: String
+  description: String
+  featured: Boolean
+  category: Category! @belongsTo
 }
