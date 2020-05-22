@@ -51,7 +51,7 @@ class DatabaseSeeder extends Seeder
         $x->save();
 
         $x = new App\Category;
-        $x->name = "Marketing";
+        $x->name = "Finance";
         $x->save();
 
         $x = new App\Book;
@@ -64,11 +64,29 @@ class DatabaseSeeder extends Seeder
         $x->save();
 
         $x = new App\Book;
-        $x->category_id = 1;
+        $x->category_id = 2;
         $x->title = "STFU and do it";
         $x->author = "Gary V";
         $x->description = "I made this shit up";
         $x->link = "https://vaynermedia.com/";
+        $x->featured = true;
+        $x->save();
+
+        $x = new App\Book;
+        $x->category_id = 3;
+        $x->title = "Got Some Shit On His Mind";
+        $x->author = "Al Sharpton";
+        $x->description = "Rando Schmando";
+        $x->link = "https://yahoo.com/";
+        $x->featured = false;
+        $x->save();
+
+        $x = new App\Book;
+        $x->category_id = 2;
+        $x->title = "Weiners and Such";
+        $x->author = "Anthony Weiner";
+        $x->description = "Flopppy Weiners";
+        $x->link = "https://google.com/";
         $x->featured = false;
         $x->save();
     }

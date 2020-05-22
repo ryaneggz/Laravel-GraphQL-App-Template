@@ -9,7 +9,7 @@ class Category extends Model
 {
     // protected $guarded = [];
 
-    public function book()
+    public function books(): HasMany
     {
         return $this->hasMany(Book::class);
     }

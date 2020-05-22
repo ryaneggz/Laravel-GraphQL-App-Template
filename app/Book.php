@@ -9,7 +9,7 @@ class Book extends Model
 {
     // protected $guarded = [];
 
-    public function category()
+    public function category(): BelongsTo
     {
         return $this->belongsTo(Category::class);
     }

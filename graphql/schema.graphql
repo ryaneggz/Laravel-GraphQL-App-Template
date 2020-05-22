@@ -22,7 +22,7 @@ type Query {
     booksByFeatured(featured: Boolean! @eq): [Book] @all
     # CATEGORIES
     categories: [Category] @all
-    category(id: Int! @eq): Category @find
+    category(id: ID @eq): Category @find
 }
 
 # Mutations
@@ -32,7 +32,7 @@ type Mutation {
   """
   createUser(
     name: String! @rules(apply: ["required", "min:4"]),
-    email: String! @rules(apply: ["required", "email", "unique: users, email"]),
+    email: String! @rules(apply: ["required", "email", "unique:users,email"]),
     password: String! @rules(apply: ["min:4"]) @bcrypt
   ): User! @create
 
@@ -105,12 +105,16 @@ type Post {
   content: String!
   author: User! @belongsTo
   comments: [Comment!]! @hasMany
+  created_at: DateTime!
+  updated_at: DateTime!
 }
 
 type Comment {
   id: ID!
   reply: String!
   post: Post! @belongsTo
+  created_at: DateTime!
+  updated_at: DateTime!
 }
 
 type Category {
@@ -128,4 +132,6 @@ type Book {
   description: String
   featured: Boolean
   category: Category! @belongsTo
+  created_at: DateTime!
+  updated_at: DateTime!
 }
